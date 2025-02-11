@@ -1,0 +1,6 @@
+[submodule "Assets/Script/Unity-Tetris-Proto"]
+	path = Assets/Script/Unity-Tetris-Proto
+	url = https://github.com/riyuejiuzhao/Unity-Tetris-Proto.git
+[submodule "Assets/Script/Proto"]
+	path = Assets/Script/Proto
+	url = https://github.com/riyuejiuzhao/Unity-Tetris-Proto.git
