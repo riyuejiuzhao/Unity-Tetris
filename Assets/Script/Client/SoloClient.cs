@@ -29,12 +29,12 @@ public class SoloClient : IClient
 
     }
 
-    const string LogFile = "Frame.log";
-    StreamWriter logWriter;
+    //const string LogFile = "Frame.log";
+    //StreamWriter logWriter;
     //根据地址与服务器取得链接
     public void Connect(string address)
     {
-        logWriter = new StreamWriter(LogFile);
+        //logWriter = new StreamWriter(LogFile);
     }
 
     public void GameStart(ClientInit init)
@@ -47,7 +47,7 @@ public class SoloClient : IClient
         var reply = new SyncFrameReply();
         reply.Frames.Add(frame.Clone());
         frameUpdates.Enqueue(reply);
-        logWriter.WriteLine("Send: " + JsonFormatter.Default.Format(frame));
+        //logWriter.WriteLine("Send: " + JsonFormatter.Default.Format(frame));
     }
 
     public SyncFrameReply SyncFrame()
@@ -55,8 +55,8 @@ public class SoloClient : IClient
         SyncFrameReply rt = null;
         if (frameUpdates.Count > 0)
             rt = frameUpdates.Dequeue();
-        if (rt != null)
-            logWriter.WriteLine("Sync: " + JsonFormatter.Default.Format(rt));
+        //if (rt != null)
+        //    logWriter.WriteLine("Sync: " + JsonFormatter.Default.Format(rt));
         return rt;
     }
 
