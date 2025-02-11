@@ -1,8 +1,11 @@
+using JetBrains.Annotations;
 using NUnit.Framework.Internal;
 using Proto;
 using System.Collections;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public partial class GameWorld : MonoBehaviour
 {
@@ -18,13 +21,18 @@ public partial class GameWorld : MonoBehaviour
     [SerializeField]
     VisualBlockMap otherMap;
 
+    [SerializeField]
+    TMP_Text endText;
+    [SerializeField]
+    Image endBg;
+
     //进入局内后启动自己的逻辑帧
     public void Start()
     {
         FrameNumber = 0;
         Client.GameStart(selfMap.GameStart());
         var inits = Client.SyncGameStart();
-        foreach(var clientInit in inits.Clients)
+        foreach (var clientInit in inits.Clients)
         {
             if (Client.PlayerID == clientInit.PlayerId)
                 selfMap.SyncGameStart(clientInit);
@@ -42,6 +50,21 @@ public partial class GameWorld : MonoBehaviour
         updateFrame.ClearEvent.Y.Clear();
     }
 
+    void FailCheck()
+    {
+        var otherFail = (otherMap != null) && otherMap.Fail;
+        if (selfMap.Fail && otherFail)
+            endText.text = "平局";
+        else if (selfMap.Fail)
+            endText.text = "失败";
+        else if (otherFail)
+            endText.text = "胜利";
+        else
+            return;
+        endBg.gameObject.SetActive(true);
+        Client.Disconnect();
+    }
+
     //生成下一帧的内容
     void LogicUpdate(SyncFrameReply syncFrames, FrameUpdate updateFrame)
     {
@@ -56,6 +79,7 @@ public partial class GameWorld : MonoBehaviour
             else
                 otherMap.LogicUpdate(frame, updateFrame);
         }
+        FailCheck();
     End:
         InputLogic(updateFrame);
     }

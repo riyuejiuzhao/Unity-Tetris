@@ -60,7 +60,7 @@ public class LogicBlockMap : VisualBlockMap
 
     public override void LogicUpdate(FrameUpdate syncFrame, FrameUpdate updateFrame)
     {
-        if (fail)
+        if (Fail)
             return;
         base.LogicUpdate(syncFrame, updateFrame);
         if (!NowBlock.IBlock.Stop)

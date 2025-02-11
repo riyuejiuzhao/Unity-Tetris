@@ -9,4 +9,5 @@ public interface IClient
     public SyncInitReply SyncGameStart();
     public void SendFrame(FrameUpdate frame);
     public SyncFrameReply SyncFrame();
+    public void Disconnect();
 }

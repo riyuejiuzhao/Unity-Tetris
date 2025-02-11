@@ -31,7 +31,7 @@ public class VisualBlockMap : MonoBehaviour
     protected Transform[] preSlot;
 
     //是否失败
-    protected bool fail = false;
+    public bool Fail = false;
 
     //当前方块
     public VisualBlock NowBlock { get; protected set; }
@@ -156,7 +156,7 @@ public class VisualBlockMap : MonoBehaviour
             SetBlockInSlot(blockInSlot[i],i-1);
         SetBlockInSlot(InstantiateBlock<T>(syncFrame.BlockInfo.Shape), blockInSlot.Length - 1);
         if (NowBlock.IBlock.OverlapSelf())
-            fail = true;
+            Fail = true;
     }
 
     protected virtual void SyncCreateBlock(FrameUpdate syncFrame)
@@ -166,11 +166,11 @@ public class VisualBlockMap : MonoBehaviour
 
     public virtual void LogicUpdate(FrameUpdate syncFrame, FrameUpdate updateFrame)
     {
-        if (fail)
+        if (Fail)
             return;
         SyncCreateBlock(syncFrame);
         // 这里有可能SyncCreateBlock后fail改变
-        if (fail)
+        if (Fail)
             return;
         //同步表现删除
         SyncClearEvent(syncFrame);

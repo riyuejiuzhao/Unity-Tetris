@@ -66,4 +66,6 @@ public class SoloClient : IClient
         rt.Clients.Add(clientInit);
         return rt;
     }
+
+    public void Disconnect() { }
 }
