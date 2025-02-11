@@ -32,10 +32,9 @@ public class SoloClient : IClient
     const string LogFile = "Frame.log";
     StreamWriter logWriter;
     //根据地址与服务器取得链接
-    public bool Connect(string address)
+    public void Connect(string address)
     {
         logWriter = new StreamWriter(LogFile);
-        return true;
     }
 
     public void GameStart(ClientInit init)

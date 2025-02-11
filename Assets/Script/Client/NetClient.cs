@@ -1,3 +1,4 @@
+using Cysharp.Net.Http;
 using Grpc.Net.Client;
 using Proto;
 using System;
@@ -5,10 +6,11 @@ using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class NetClient : IClient
 {
-    const int NetTimeInterval = 33;
+    const int NetTimeInterval = 3;
 
     private int? seed = null;
     public int Seed
@@ -38,23 +40,16 @@ public class NetClient : IClient
     Task sendTask;
     Task syncTask;
 
-    public int PlayerID => throw new NotImplementedException();
+    public int PlayerID { get; set; }
 
     //根据地址与服务器取得链接
-    public bool Connect(string address)
+    public void Connect(string address)
     {
-        channel = GrpcChannel.ForAddress(address);
+        var handler = new YetAnotherHttpHandler();
+        handler.Http2Only = true;
+        channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions() { HttpHandler = handler });
         client = new TetrisService.TetrisServiceClient(channel);
-        try
-        {
-            client.Ping(new Empty());
-        }
-        catch (Exception e)
-        {
-            Debug.LogException(e);
-            return false;
-        }
-        return true;
+        client.Ping(new Empty());
     }
 
     public void GameStart(ClientInit init)
@@ -76,13 +71,20 @@ public class NetClient : IClient
     {
         Debug.Log("客户端Send链接启动");
         var token = cancelSource.Token;
-        while (token.IsCancellationRequested)
+        try
         {
-            while(frameUpdates.TryDequeue(out var nowFrame))
-                client.SendFrame(nowFrame);
-            Thread.Sleep(NetTimeInterval);
+            while (true)
+            {
+                token.ThrowIfCancellationRequested();
+                while (frameUpdates.TryDequeue(out var nowFrame))
+                    client.SendFrame(nowFrame);
+                Thread.Sleep(NetTimeInterval);
+            }
         }
-        Debug.Log("客户端Send链接终止");
+        catch (Exception)
+        {
+            Debug.Log("客户端Send链接终止");
+        }
     }
 
     /// <summary>
@@ -126,9 +128,20 @@ public class NetClient : IClient
     public SyncInitReply SyncGameStart()
     {
         var request = new SyncInitRequest();
+        request.PlayerId = PlayerID;
         var rt = client.SyncInit(request);
         sendTask = Task.Run(SendTask);
         syncTask = Task.Run(SyncTask);
         return rt;
+    }
+
+    public MatchSuccess WaitMatch()
+    {
+        var req = new WaitForMatchRequest();
+        req.PlayerId = PlayerID;
+        using var call = client.WaitForMatch(req);
+        if (call.ResponseStream.MoveNext(CancellationToken.None).Result)
+            return call.ResponseStream.Current;
+        return null;
     }
 }

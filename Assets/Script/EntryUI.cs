@@ -6,11 +6,11 @@ public class EntryUI : MonoBehaviour
 {
     [SerializeField]
     TMP_InputField address;
+    [SerializeField]
+    TMP_InputField netPlayerID;
 
     [SerializeField]
     TMP_InputField seed;
-
-    IClient gameClient;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -24,28 +24,37 @@ public class EntryUI : MonoBehaviour
 
     public void NetGameStart()
     {
-        gameClient = new NetClient();
-        GameStart();
+        var client = new NetClient();
+        client.PlayerID = int.Parse(netPlayerID.text);
+        client.Connect(address.text);
+        client.WaitMatch();
+
+        GameWorld.Client = client;
+        SceneManager.LoadScene("NetGame");
     }
 
     public void SoloGameStart()
     {
-        gameClient = new SoloClient();
-        GameStart();
+        var client = new SoloClient();
+        client.Connect(address.text);
+
+        GameWorld.Client = client;
+        SceneManager.LoadScene("Game");
     }
 
     public void SoloSeedGameStart()
     {
-        gameClient = new SoloClient();
-        gameClient.Seed = int.Parse(seed.text);
-        GameStart();
-    }
+        var client = new SoloClient();
+        client.Seed = int.Parse(seed.text);
+        client.Connect(address.text);
 
-    void GameStart()
-    {
-        if (!gameClient.Connect(address.text))
-            Debug.LogError("客户端连接失败");
-        GameWorld.Client = gameClient;
+        GameWorld.Client = client;
         SceneManager.LoadScene("Game");
     }
+
+    //void Connect(IClient gameClient)
+    //{
+    //    gameClient.Connect(address.text);
+    //    GameWorld.Client = gameClient;
+    //}
 }

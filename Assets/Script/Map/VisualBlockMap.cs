@@ -21,10 +21,9 @@ public class VisualBlockMap : MonoBehaviour
     protected VisualBlock[] blockInSlot;
 
     //Map生成位置
-    [SerializeField]
-    [Tooltip("新方块生成的位置")]
-    protected Vector3 startPointOffset;
-    protected Vector3 startPoint => transform.position + startPointOffset;
+    protected SpriteRenderer sprite;
+    protected Vector3 startPoint => sprite.bounds.center +
+        sprite.bounds.extents.y * Vector3.up + Vector3.back;
 
     //预览队列
     [SerializeField]
@@ -39,6 +38,7 @@ public class VisualBlockMap : MonoBehaviour
 
     protected virtual void Awake()
     {
+        sprite = GetComponent<SpriteRenderer>();
         blockInSlot = new VisualBlock[preSlot.Length];
     }
 
@@ -49,7 +49,7 @@ public class VisualBlockMap : MonoBehaviour
         block.transform.position = new Vector3(
             slot.transform.position.x,
             slot.transform.position.y,
-            slot.transform.position.z + startPointOffset.z);
+            slot.transform.position.z + startPoint.z);
         blockInSlot[slotIndex] = block;
     }
 
@@ -185,6 +185,8 @@ public class VisualBlockMap : MonoBehaviour
     #region Debug
     private void OnDrawGizmosSelected()
     {
+        if (sprite == null)
+            sprite = GetComponent<SpriteRenderer>();
         var c = Gizmos.color;
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(startPoint, 0.1f);
