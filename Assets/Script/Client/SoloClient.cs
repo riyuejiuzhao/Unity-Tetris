@@ -6,6 +6,8 @@ using System.IO;
 
 public class SoloClient : IClient
 {
+    JsonFormatter jsonFormatter = new(new JsonFormatter.Settings(formatDefaultValues: true));
+
     Queue<SyncFrameReply> frameUpdates = new ();
     ClientInit clientInit;
 
@@ -30,16 +32,14 @@ public class SoloClient : IClient
     }
 
     const string LogFile = "Frame.log";
-    StreamWriter logWriter;
-    //根据地址与服务器取得链接
-    public void Connect(string address)
-    {
-        logWriter = new StreamWriter(LogFile);
-    }
+    StreamWriter logWriter = new(LogFile);
+
+    public void Connect(string address) { }
 
     public void GameStart(ClientInit init)
     {
         clientInit = init;
+        logWriter.WriteLine("GameStart: " + jsonFormatter.Format(init));
     }
 
     public void SendFrame(FrameUpdate frame)
@@ -47,7 +47,7 @@ public class SoloClient : IClient
         var reply = new SyncFrameReply();
         reply.Frames.Add(frame.Clone());
         frameUpdates.Enqueue(reply);
-        logWriter.WriteLine("Send: " + JsonFormatter.Default.Format(frame));
+        logWriter.WriteLine("Send: " + jsonFormatter.Format(frame));
     }
 
     public SyncFrameReply SyncFrame()
@@ -56,7 +56,7 @@ public class SoloClient : IClient
         if (frameUpdates.Count > 0)
             rt = frameUpdates.Dequeue();
         if (rt != null)
-            logWriter.WriteLine("Sync: " + JsonFormatter.Default.Format(rt));
+            logWriter.WriteLine("Sync: " + jsonFormatter.Format(rt));
         return rt;
     }
 
@@ -64,6 +64,7 @@ public class SoloClient : IClient
     {
         var rt = new SyncInitReply();
         rt.Clients.Add(clientInit);
+        logWriter.WriteLine("SyncGameStart: " + jsonFormatter.Format(rt));
         return rt;
     }
 

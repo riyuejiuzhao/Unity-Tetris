@@ -1,9 +1,6 @@
-using Google.Protobuf.Collections;
-using NUnit.Framework;
 using Proto;
 using System;
 using UnityEngine;
-using UnityEngine.Video;
 
 /// <summary>
 /// 纯粹用来表现的BlockMap
@@ -31,6 +28,7 @@ public class VisualBlockMap : MonoBehaviour
     protected Transform[] preSlot;
 
     //是否失败
+    [HideInInspector]
     public bool Fail = false;
 
     //当前方块
@@ -110,7 +108,7 @@ public class VisualBlockMap : MonoBehaviour
 
     public virtual ClientInit GameStart()
     {
-        throw new NotImplementedException();
+        return null;
     }
 
     public virtual void SyncGameStart(ClientInit init)
@@ -168,12 +166,16 @@ public class VisualBlockMap : MonoBehaviour
     {
         if (Fail)
             return;
+        // 同步表现删除
+        // 检测删除行为的时候，由于物理引擎更新可能有延迟
+        // 我们必须先检测场上所有的方块的删除
+        // 再创建新的方块，否则新创建的方块就会被错误的
+        // 检测到碰撞（即使新方块是放在Slot里也会出现这个问题）
+        SyncClearEvent(syncFrame);
         SyncCreateBlock(syncFrame);
         // 这里有可能SyncCreateBlock后fail改变
         if (Fail)
             return;
-        //同步表现删除
-        SyncClearEvent(syncFrame);
         //更新方块
         NowBlock.LogicUpdate(syncFrame, updateFrame);
         if (!NowBlock.IBlock.Stop)

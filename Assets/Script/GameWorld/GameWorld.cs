@@ -17,7 +17,7 @@ public partial class GameWorld : MonoBehaviour
     public int PlayerID => Client.PlayerID;
 
     [SerializeField]
-    LogicBlockMap selfMap;
+    VisualBlockMap selfMap;
     [SerializeField]
     VisualBlockMap otherMap;
 

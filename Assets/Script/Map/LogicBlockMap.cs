@@ -8,7 +8,6 @@ public class LogicBlockMap : VisualBlockMap
 
     public override ClientInit GameStart()
     {
-        Random.InitState(GameWorld.Client.Seed);
         var rt = new ClientInit();
         rt.PlayerId = GameWorld.Client.PlayerID;
         rt.RandomSeed = GameWorld.Client.Seed;
@@ -19,6 +18,7 @@ public class LogicBlockMap : VisualBlockMap
 
     public override void SyncGameStart(ClientInit init)
     {
+        Random.InitState(init.RandomSeed);
         SyncGameStart<LogicBlockImp>(init);
     }
 

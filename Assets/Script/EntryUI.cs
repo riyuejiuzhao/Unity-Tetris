@@ -8,7 +8,8 @@ public class EntryUI : MonoBehaviour
     TMP_InputField address;
     [SerializeField]
     TMP_InputField netPlayerID;
-
+    [SerializeField]
+    TMP_InputField recordFile;
     [SerializeField]
     TMP_InputField seed;
 
@@ -36,8 +37,6 @@ public class EntryUI : MonoBehaviour
     public void SoloGameStart()
     {
         var client = new SoloClient();
-        client.Connect(address.text);
-
         GameWorld.Client = client;
         SceneManager.LoadScene("Game");
     }
@@ -46,15 +45,14 @@ public class EntryUI : MonoBehaviour
     {
         var client = new SoloClient();
         client.Seed = int.Parse(seed.text);
-        client.Connect(address.text);
-
         GameWorld.Client = client;
         SceneManager.LoadScene("Game");
     }
 
-    //void Connect(IClient gameClient)
-    //{
-    //    gameClient.Connect(address.text);
-    //    GameWorld.Client = gameClient;
-    //}
+    public void ReplayGame()
+    {
+        var client = new ReplayClient(recordFile.text);
+        GameWorld.Client = client;
+        SceneManager.LoadScene("SoloReplay");
+    }
 }
