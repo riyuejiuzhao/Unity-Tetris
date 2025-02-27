@@ -11,7 +11,7 @@ public class LogicBlockMap : VisualBlockMap
         var rt = new ClientInit();
         rt.PlayerId = GameWorld.Client.PlayerID;
         rt.RandomSeed = GameWorld.Client.Seed;
-        for (int i = 0; i < blockPrefab.Length; i++)
+        for (int i = 0; i < blockPrefab.Blocks.Length; i++)
             rt.Blocks.Add(nowBag.Pop());
         return rt;
     }

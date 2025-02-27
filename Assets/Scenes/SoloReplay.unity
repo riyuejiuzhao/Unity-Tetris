@@ -864,14 +864,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   World: {fileID: 0}
-  blockPrefab:
-  - {fileID: 7895481570511042907, guid: 85f0b4cd76058c74bb84424e68632eec, type: 3}
-  - {fileID: 7895481570511042907, guid: 6099941ec455e3a44a1624efba119f19, type: 3}
-  - {fileID: 7895481570511042907, guid: 3e95905708b36f346917dfad1509860e, type: 3}
-  - {fileID: 7895481570511042907, guid: 13129ff9505d93f49854dd258775b8e9, type: 3}
-  - {fileID: 7895481570511042907, guid: 2503a0f78286b39488efb49fd91deeb4, type: 3}
-  - {fileID: 7895481570511042907, guid: d2eb03c4b8ba1ee4382e80aa824f04a7, type: 3}
-  - {fileID: 7895481570511042907, guid: 5369c0d267c1b434b9d63976ab45cadc, type: 3}
+  blockPrefab: {fileID: 11400000, guid: 79f411d52c923054e9ce1450e49d766d, type: 2}
   preSlot:
   - {fileID: 698661237712091717}
   - {fileID: 698661237712091716}

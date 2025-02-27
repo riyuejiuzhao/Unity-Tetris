@@ -20,8 +20,5 @@ public abstract class BlockImp
         Map = map;
         this.block = block;
     }
-
-    public abstract bool OverlapSelf();
-    public abstract void Start();
     public abstract void LogicUpdate(FrameUpdate syncFrame, FrameUpdate updateFrame);
 }

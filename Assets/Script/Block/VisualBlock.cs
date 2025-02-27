@@ -1,10 +1,17 @@
 using Proto;
 using UnityEngine;
 
+[RequireComponent(typeof(BlockOverlap))]
 public class VisualBlock : MonoBehaviour
 {
+    public BlockOverlap BlockOverlap;
+    public BlockShow BlockShow;
+
+    [HideInInspector]
     public BlockImp IBlock { get; set; }
+    [HideInInspector]
     public VisualBlockMap Map => IBlock.Map;
+    [HideInInspector]
     public GameWorld World => Map?.World;
 
     /// <summary>
@@ -12,11 +19,6 @@ public class VisualBlock : MonoBehaviour
     /// </summary>
     [SerializeField]
     protected Vector2 offset;
-
-    void Start()
-    {
-        IBlock.Start();
-    }
 
     public void LogicUpdate(FrameUpdate syncFrame, FrameUpdate updateFrame)
     {

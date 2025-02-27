@@ -3,44 +3,13 @@ using UnityEngine;
 
 public class VisualBlockImp : BlockImp
 {
-    protected BoxCollider2D[] m_boxes;
-
-    protected BoxCollider2D[] boxes
-    {
-        get
-        {
-            if (m_boxes == null)
-                m_boxes = block.GetComponentsInChildren<BoxCollider2D>();
-            return m_boxes;
-        }
-    }
-
     public override bool Stop
     {
         get => base.Stop;
         protected set {
-            for (int i = 0; i < boxes.Length; i++)
-                boxes[i].enabled = value;
+            block.BlockOverlap.SetBoxesEnable(value);
             base.Stop = value;
         }
-    }
-
-    public override void Start()
-    {
-        for (int i = 0; i < boxes.Length; i++)
-            boxes[i].enabled = false;
-    }
-
-    public override bool OverlapSelf()
-    {
-        bool overlap = false;
-        for (int i = 0; i < boxes.Length; i++)
-        {
-            overlap = overlap || Physics2D.OverlapBox(
-                boxes[i].offset + (Vector2)boxes[i].transform.position,
-                boxes[i].size, 0);
-        }
-        return overlap;
     }
 
     //TODO 超级旋转系统还未实现
@@ -51,13 +20,15 @@ public class VisualBlockImp : BlockImp
     /// <returns></returns>
     protected bool Rotate(float angle)
     {
+        bool rt = true;
         transform.Rotate(0, 0, angle);
-        if (OverlapSelf())
+        if (block.BlockOverlap.OverlapSelf())
         {
             transform.Rotate(0, 0, -angle);
-            return false;
+            rt = false;
         }
-        return true;
+        block.BlockShow.ResetPosition();
+        return rt;
     }
 
     /// <summary>
@@ -67,19 +38,21 @@ public class VisualBlockImp : BlockImp
     /// <returns></returns>
     protected bool MoveHorizontal(int offset)
     {
+        bool rt = true;
         transform.position = new Vector3(
             transform.position.x + offset,
             transform.position.y,
             transform.position.z);
-        if (OverlapSelf())
+        if (block.BlockOverlap.OverlapSelf())
         {
             transform.position = new Vector3(
                 transform.position.x - offset,
                 transform.position.y,
                 transform.position.z);
-            return false;
+            rt = false;
         }
-        return true;
+        block.BlockShow.ResetPosition();
+        return rt;
     }
 
     /// <summary>
@@ -95,7 +68,7 @@ public class VisualBlockImp : BlockImp
                 transform.position.x,
                 transform.position.y - 1,
                 transform.position.z);
-            if (OverlapSelf())
+            if (block.BlockOverlap.OverlapSelf())
             {
                 transform.position = new Vector3(
                     transform.position.x,
@@ -147,5 +120,4 @@ public class VisualBlockImp : BlockImp
         }
         return true;
     }
-
 }

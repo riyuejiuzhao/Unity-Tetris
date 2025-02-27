@@ -13,7 +13,7 @@ public class VisualBlockMap : MonoBehaviour
 
     //Block预制体
     [SerializeField]
-    protected GameObject[] blockPrefab;
+    protected BlockPrefab blockPrefab;
     //预览队列
     protected VisualBlock[] blockInSlot;
 
@@ -56,6 +56,9 @@ public class VisualBlockMap : MonoBehaviour
         block.enabled = true;
         block.transform.SetParent(transform, false);
         block.SetStartPosition(startPoint);
+        block.BlockShow.gameObject.SetActive(true);
+        block.BlockShow.ResetPosition();
+        block.BlockShow.transform.SetParent(transform);
         NowBlock = block;
     }
 
@@ -118,7 +121,7 @@ public class VisualBlockMap : MonoBehaviour
 
     protected VisualBlock InstantiateBlock<T>(int index) where T : BlockImp, new()
     {
-        var nowObj = Instantiate(blockPrefab[index]);
+        var nowObj = Instantiate(blockPrefab.Blocks[index]);
         var block = nowObj.GetComponent<VisualBlock>();
         block.IBlock = new T();
         block.IBlock.Init(this, block);
@@ -153,7 +156,7 @@ public class VisualBlockMap : MonoBehaviour
         for (int i = 1; i < blockInSlot.Length; i++)
             SetBlockInSlot(blockInSlot[i],i-1);
         SetBlockInSlot(InstantiateBlock<T>(syncFrame.BlockInfo.Shape), blockInSlot.Length - 1);
-        if (NowBlock.IBlock.OverlapSelf())
+        if (NowBlock.BlockOverlap.OverlapSelf())
             Fail = true;
     }
 
@@ -181,6 +184,7 @@ public class VisualBlockMap : MonoBehaviour
         if (!NowBlock.IBlock.Stop)
             return;
         //如果方块碰撞则释放方块
+        Destroy(NowBlock.BlockShow.gameObject);
         NowBlock.enabled = false;
     }
 
