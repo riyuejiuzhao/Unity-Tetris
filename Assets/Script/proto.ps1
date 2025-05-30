@@ -1,0 +1,1 @@
+protoc --proto_path=./Proto --csharp-grpc_out=./Proto --csharp_out=./Proto ./Proto/*.proto
