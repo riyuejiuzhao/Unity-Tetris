@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Proto;
+using Google.Protobuf;
 
 // 输入控制
 public static class InputS
@@ -14,7 +15,7 @@ public static class InputS
     public static KeyCode Save = KeyCode.LeftShift;
     public static KeyCode LeftRotate = KeyCode.LeftControl;
 
-    public static OperationType Input()
+    public static OperationType InputAction()
     {
         if (UnityEngine.Input.GetKeyDown(LeftMove))
             return OperationType.LeftMove;
@@ -33,6 +34,21 @@ public static class InputS
         else if (UnityEngine.Input.GetKeyUp(SoftDrop))
             return OperationType.SoftDropEnd;
         return OperationType.OpUnknown;
+    }
+
+    public static void InputNet(string PlayerID)
+    {
+        var i = InputAction();
+        if (i == OperationType.OpUnknown)
+            return;
+        Net.Instance.SendAsync(new MessageWrapper()
+        {
+            C2SInput = new C2S_Input()
+            {
+                PlayerId = PlayerID,
+                Operations = new PlayerControl() { Operation = i }.ToByteString(),
+            },
+        }.ToByteArray());
     }
 
     public static void ActionProcess(BlockMap map, OperationType action)
@@ -57,7 +73,7 @@ public static class InputS
                 BlockDownS.HardDown(map.NowBlock);
                 break;
             case OperationType.SoftDrop:
-                BlockDownS.SoftDownStart(map.NowBlock);
+                BlockDownS.SoftDownStart(map);
                 break;
             case OperationType.SoftDropEnd:
                 BlockDownS.SoftDownEnd(map.NowBlock);

@@ -6,8 +6,8 @@ using UnityEngine;
 // 下落系统
 public static class BlockDownS
 {
-    public static float NormalInterval = 1f;
-    public static float SoftInterval = 0.5f;
+    public static int NormalInterval = 30;
+    public static int SoftInterval = 15;
 
     // 返回值说明碰到底了
     private static bool MoveDown(Block block, int offset)
@@ -33,20 +33,21 @@ public static class BlockDownS
         block.Stop = MoveDown(block, 1000);
     }
 
-    public static void AutoDown(Block block)
+    public static void AutoDown(BlockMap map)
     {
-        var time = Time.time;
-        if (block.LastDownTime + block.Interval > time)
+        var block = map.NowBlock;
+        if (block.LastDownFrame + block.Interval > map.FrameNumber)
             return;
         block.Stop = MoveDown(block, 1);
-        block.LastDownTime = time;
+        block.LastDownFrame = map.FrameNumber;
     }
 
-    public static void SoftDownStart(Block block)
+    public static void SoftDownStart(BlockMap map)
     {
+        var block = map.NowBlock;
         block.Interval = SoftInterval;
         block.Stop = MoveDown(block, 1);
-        block.LastDownTime = Time.time;
+        block.LastDownFrame = map.FrameNumber;
     }
 
     public static void SoftDownEnd(Block block)

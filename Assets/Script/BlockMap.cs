@@ -1,3 +1,4 @@
+using Google.Protobuf;
 using Proto;
 using System;
 using UnityEngine;
@@ -6,6 +7,10 @@ public class BlockMap : MonoBehaviour
 {
     public Transform[] PreviewBlockSlot;
 
+    [HideInInspector]
+    public string PlayerID;
+    [HideInInspector]
+    public int FrameNumber;
     [HideInInspector]
     public SpriteRenderer Sprite;
     public Vector2 StartPoint => Sprite.bounds.center +
@@ -37,15 +42,22 @@ public class BlockMap : MonoBehaviour
         MapS.DrawNowBlock(this);
     }
 
-    private void Update()
+    public void Update()
     {
-        var i = InputS.Input();
-        if (i == OperationType.OpUnknown)
+        var frames = GameWorld.Instance.Frames[PlayerID];
+        if (frames == null)
             return;
-        InputS.ActionProcess(this, i);
-        if (!NowBlock.Stop)
-            return;
-        BlockStopS.Stop(this);
+        for (int i = 0; i < 30 && frames.ContainsKey(FrameNumber); i++)
+        {
+            var s2C_Frame = frames[FrameNumber];
+            for (int j = 0; j < s2C_Frame.Operations.Count; j++)
+            {
+                var operation = PlayerControl.Parser.ParseFrom(s2C_Frame.Operations[i].ToByteArray());
+                InputS.ActionProcess(this, operation.Operation);
+            }
+            BlockDownS.AutoDown(this);
+            FrameNumber += 1;
+        }
     }
 
     #region Debug

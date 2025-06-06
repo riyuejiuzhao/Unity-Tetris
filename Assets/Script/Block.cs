@@ -21,20 +21,15 @@ public class Block : MonoBehaviour
     public int Status = 0;
     public BoxCollider2D[] Boxes { get; private set; }
     [HideInInspector]
-    public float LastDownTime = 0;
+    public int LastDownFrame = 0;
     [HideInInspector]
-    public float Interval = BlockDownS.NormalInterval;
+    public int Interval = BlockDownS.NormalInterval;
     [HideInInspector]
     public bool Stop = false;
 
     private void Awake()
     {
         Boxes = GetComponentsInChildren<BoxCollider2D>();
-    }
-
-    private void Update()
-    {
-        BlockDownS.AutoDown(this);
     }
 
     #region Debug
