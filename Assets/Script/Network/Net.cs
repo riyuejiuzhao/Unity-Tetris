@@ -22,6 +22,7 @@ public class Net : MonoBehaviour, IKcpCallback
             Debug.LogError("已经有了一个Net，不能再有一个");
             return;
         }
+        DontDestroyOnLoad(gameObject);
         Instance = this;
     }
 

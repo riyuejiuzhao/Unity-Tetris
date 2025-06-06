@@ -50,6 +50,7 @@ GameObject:
   - component: {fileID: 6119629041832747893}
   - component: {fileID: 916620111816233267}
   - component: {fileID: 6615673617797532939}
+  - component: {fileID: 8432455663765104151}
   m_Layer: 0
   m_Name: Bg
   m_TagString: Untagged
@@ -266,6 +267,30 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 21}
   m_EdgeRadius: 0
+--- !u!114 &8432455663765104151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7074767760109091267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73cf8f3465f828244aba7cc61dcff52a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PreviewBlockSlot:
+  - {fileID: 119798288705123899}
+  - {fileID: 6101322261622297531}
+  - {fileID: 8523430661446171106}
+  - {fileID: 1105011833715969407}
+  - {fileID: 2832193908860439872}
+  - {fileID: 551338953760783766}
+  PlayerID: 
+  FrameNumber: 0
+  Sprite: {fileID: 2657944739194905046}
+  NowBlock: {fileID: 0}
+  BagTop: 0
 --- !u!1001 &57888141361643685
 PrefabInstance:
   m_ObjectHideFlags: 0
