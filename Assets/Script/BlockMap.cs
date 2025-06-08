@@ -57,6 +57,7 @@ public class BlockMap : MonoBehaviour
             BlockDownS.AutoDown(this);
             if (NowBlock.Stop)
                 BlockStopS.Stop(this);
+            frames.Remove(FrameNumber);
             FrameNumber += 1;
         }
     }

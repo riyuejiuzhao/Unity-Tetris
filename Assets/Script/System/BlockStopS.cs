@@ -20,6 +20,12 @@ public static class BlockStopS
         MapS.NextBlock(map);
         MapS.DrawPreviewBlocks(map);
         MapS.DrawNowBlock(map);
+        if (BlockOverlapS.BlockOverlap(map.NowBlock))
+        {
+            Debug.Log($"{map.PlayerID}游戏失败");
+            map.NowBlock.enabled = false;
+            map.enabled = false;
+        }
     }
 }
 
@@ -30,26 +36,28 @@ public static class RemoveBlockS
         var minY = map.MinCenter.y;
         var minX = map.Sprite.bounds.min.x;
         var maxX = map.Sprite.bounds.max.x;
+        int before = 0;
         for (int i = 0; i < BlockMap.Height; i++)
         {
             var hits = Physics2D.LinecastAll(new Vector2(minX, minY + i),
                 new Vector2(maxX, minY + i));
             if (hits.Length == 0)
                 break;
-            if (hits.Length == BlockMap.Width)
+            else if (hits.Length == BlockMap.Width)
             {
                 //删除本体
                 for (int j = 0; j < hits.Length; j++)
                     UnityEngine.Object.Destroy(hits[j].transform.gameObject);
-                //所有上面的都下移一行
-                for (int j = i + 1; j < hits.Length; j++)
+                before += 1;
+            }
+            else
+            {
+                // 不是满行，下移动before
+                for (int j = 0; j < hits.Length; j++)
                 {
-                    var uplineHits = Physics2D.LinecastAll(new Vector2(minX, minY + j),
-                        new Vector2(maxX, minY + j));
-                    foreach (var hit in uplineHits)
-                        hit.transform.position = (Vector2)hit.transform.position + Vector2.down;
+                    var box = hits[j].transform;
+                    box.position = new Vector2(box.position.x, box.position.y - before);
                 }
-                i -= 1;
             }
         }
     }

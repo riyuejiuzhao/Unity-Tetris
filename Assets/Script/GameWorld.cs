@@ -24,7 +24,7 @@ public class GameWorld : MonoBehaviour
         BlockPrefabConfig.Init();
         foreach (var name in PlayerInfo.Instance.RoomPlayers)
             Frames[name] = new();
-        for (int i = 0; i < BlockMaps.Length; i++)
+        for (int i = 0; i < PlayerInfo.Instance.RoomPlayers.Length; i++)
         {
             if (PlayerInfo.Instance.RoomPlayers[i] != PlayerInfo.Instance.PlayerID)
                 continue;
@@ -32,7 +32,7 @@ public class GameWorld : MonoBehaviour
                 (PlayerInfo.Instance.RoomPlayers[i], PlayerInfo.Instance.RoomPlayers[0]);
             break;
         }
-        for (int i = 0; i < BlockMaps.Length; i++)
+        for (int i = 0; i < PlayerInfo.Instance.RoomPlayers.Length; i++)
         {
             BlockMaps[i].PlayerID = PlayerInfo.Instance.RoomPlayers[i];
         }

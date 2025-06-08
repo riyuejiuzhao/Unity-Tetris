@@ -122,6 +122,13 @@ public class EntryUI : MonoBehaviour
         SceneManager.LoadScene("NetGame");
     }
 
+    public void StartSoloGame()
+    {
+        PlayerInfo.Instance.RoomID = RoomID.text;
+        PlayerInfo.Instance.PlayerID = NetPlayerID.text;
+        SceneManager.LoadScene("Game");
+    }
+
     public void StartGame()
     {
         Net.Instance.SendAsync(new MessageWrapper()
