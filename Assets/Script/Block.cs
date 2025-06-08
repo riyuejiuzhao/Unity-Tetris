@@ -23,7 +23,17 @@ public class Block : MonoBehaviour
     [HideInInspector]
     public int LastDownFrame = 0;
     [HideInInspector]
-    public int Interval = BlockDownS.NormalInterval;
+    private int interval = BlockDownS.NormalInterval;
+    public int Interval
+    {
+        get => interval;
+        set
+        {
+            if (value == 1)
+                Debug.LogError("出错");
+            interval = value;
+        }
+    }
     [HideInInspector]
     public bool Stop = false;
 

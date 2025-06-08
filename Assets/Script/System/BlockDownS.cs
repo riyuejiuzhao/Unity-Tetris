@@ -6,8 +6,8 @@ using UnityEngine;
 // 下落系统
 public static class BlockDownS
 {
-    public static int NormalInterval = 30;
-    public static int SoftInterval = 15;
+    public static int NormalInterval = 60;
+    public static int SoftInterval = 30;
 
     // 返回值说明碰到底了
     private static bool MoveDown(Block block, int offset)

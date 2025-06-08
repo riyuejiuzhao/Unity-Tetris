@@ -713,8 +713,8 @@ MonoBehaviour:
   BlockMaps:
   - {fileID: 698661237712091710}
   - {fileID: 471205}
-  BlockPrefabConfig: {fileID: 0}
-  PlayerID: 
+  BlockPrefabConfig: {fileID: 11400000, guid: 79f411d52c923054e9ce1450e49d766d, type: 2}
+  InitFinish: 0
 --- !u!1 &2058651285
 GameObject:
   m_ObjectHideFlags: 0

@@ -34,9 +34,8 @@ public class BlockMap : MonoBehaviour
         Sprite = GetComponent<SpriteRenderer>();
     }
 
-    private void Start()
+    public void Init(int seed)
     {
-        int seed = (int)DateTime.Now.Ticks;
         MapS.InitMap(seed, this);
         MapS.DrawPreviewBlocks(this);
         MapS.DrawNowBlock(this);
@@ -44,18 +43,20 @@ public class BlockMap : MonoBehaviour
 
     public void Update()
     {
-        var frames = GameWorld.Instance.Frames[PlayerID];
-        if (frames == null)
+        var ok = GameWorld.Instance.Frames.TryGetValue(PlayerID,out var frames);
+        if (!ok)
             return;
         for (int i = 0; i < 30 && frames.ContainsKey(FrameNumber); i++)
         {
             var s2C_Frame = frames[FrameNumber];
             for (int j = 0; j < s2C_Frame.Operations.Count; j++)
             {
-                var operation = PlayerControl.Parser.ParseFrom(s2C_Frame.Operations[i].ToByteArray());
+                var operation = PlayerControl.Parser.ParseFrom(s2C_Frame.Operations[j].ToByteArray());
                 InputS.ActionProcess(this, operation.Operation);
             }
             BlockDownS.AutoDown(this);
+            if (NowBlock.Stop)
+                BlockStopS.Stop(this);
             FrameNumber += 1;
         }
     }

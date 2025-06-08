@@ -1,3 +1,4 @@
+using Google.Protobuf;
 using System;
 using System.Buffers;
 using System.Collections;
@@ -26,13 +27,26 @@ public class Net : MonoBehaviour, IKcpCallback
         Instance = this;
     }
 
-    public void Connect(string hostname, int port)
+    public void Connect(string playerID, string hostname, int port)
     {
         client = new UdpClient();
         client.Connect(hostname, port);
         KCP = new SimpleSegManager.Kcp((uint)UnityEngine.Random.Range(0, 9000), this);
         StartCoroutine(KcpUpdate());
         StartCoroutine(UdpReceiveLoop());
+        StartCoroutine(HeartBead());
+    }
+
+    private IEnumerator HeartBead()
+    {
+        while (true)
+        {
+            SendAsync(new Proto.MessageWrapper { C2SHeartbeat = new Proto.C2S_Heartbeat {
+                PlayerId = PlayerInfo.Instance.PlayerID,
+                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+            } }.ToByteArray());
+            yield return new WaitForSeconds(0.5f);
+        }
     }
 
     public void Output(IMemoryOwner<byte> buffer, int avalidLength)

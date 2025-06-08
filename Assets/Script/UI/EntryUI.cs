@@ -53,12 +53,13 @@ public class EntryUI : MonoBehaviour
 
     public void Connect()
     {
+        PlayerInfo.Instance.PlayerID = NetPlayerID.text;
         string address = Address.text.Trim(); // 例如 "localhost:8080"
         string[] parts = address.Split(':');
         if (parts.Length == 2 && int.TryParse(parts[1], out int port))
         {
             string host = parts[0];
-            Net.Instance.Connect(host, port);
+            Net.Instance.Connect(NetPlayerID.text, host, port);
         }
         else
         {
@@ -69,6 +70,7 @@ public class EntryUI : MonoBehaviour
     private void RoomInfoChangeHandle(S2C_RoomInfoChanged message)
     {
         PlayerInfo.Instance.RoomPlayers = message.PlayerIds.ToArray();
+        Debug.Log(message);
     }
 
     private void CreateRoomHandle(S2C_CreateRoom message)// byte[] bytes, int n)
@@ -117,7 +119,6 @@ public class EntryUI : MonoBehaviour
             Debug.LogError(message.ErrorMsg);
             return;
         }
-        PlayerInfo.Instance.PlayerID = NetPlayerID.text;
         SceneManager.LoadScene("NetGame");
     }
 
