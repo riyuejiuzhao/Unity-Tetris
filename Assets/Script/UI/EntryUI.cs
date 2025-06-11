@@ -70,13 +70,13 @@ public class EntryUI : MonoBehaviour
     private void RoomInfoChangeHandle(S2C_RoomInfoChanged message)
     {
         PlayerInfo.Instance.RoomPlayers = message.PlayerIds.ToArray();
-        Debug.Log(message);
     }
 
-    private void CreateRoomHandle(S2C_CreateRoom message)// byte[] bytes, int n)
+    private void CreateRoomHandle(S2C_CreateRoom message)
     {
-        RoomID.text = message.RoomId;
-        PlayerInfo.Instance.RoomID = message.RoomId;
+        RoomID.text = message.Info.RoomId;
+        PlayerInfo.Instance.RoomID = message.Info.RoomId;
+        PlayerInfo.Instance.RoomPlayers = message.Info.PlayerIds.ToArray();
     }
 
     public void CreateRoom()
@@ -97,7 +97,9 @@ public class EntryUI : MonoBehaviour
             Debug.LogError(message.ErrorMsg);
             return;
         }
-        PlayerInfo.Instance.RoomID = RoomID.text;
+        RoomID.text = message.Info.RoomId;
+        PlayerInfo.Instance.RoomID = message.Info.RoomId;
+        PlayerInfo.Instance.RoomPlayers = message.Info.PlayerIds.ToArray();
     }
 
     public void EnterRoom()

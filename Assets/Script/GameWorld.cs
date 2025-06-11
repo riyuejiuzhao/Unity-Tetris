@@ -92,6 +92,9 @@ public class GameWorld : MonoBehaviour
                 }
                 InitFinish = true;
                 break;
+            case MessageWrapper.MsgOneofCase.S2CGameEnd:
+                Debug.Log($"玩家{messageWrapper.S2CGameEnd.EndPlayer}结束游戏");
+                break;
             default:
                 Debug.LogError($"遇到了不确定的报文：{messageWrapper.MsgCase}");
                 break;

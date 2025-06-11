@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Google.Protobuf;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,21 @@ using UnityEngine;
 // 方块停止
 public static class BlockStopS
 {
+    private static void GameEnd(BlockMap map)
+    {
+        Debug.Log($"{map.PlayerID}游戏失败");
+        map.NowBlock.enabled = false;
+        map.enabled = false;
+        Net.Instance.SendAsync(new Proto.MessageWrapper
+        {
+            C2SGameEnd = new Proto.C2S_GameEnd
+            {
+                PlayerId = map.PlayerID,
+                EndGame = false,
+            }
+        }.ToByteArray());
+    }
+
     public static void Stop(BlockMap map)
     {
         map.NowBlock.enabled = false;
@@ -21,11 +37,7 @@ public static class BlockStopS
         MapS.DrawPreviewBlocks(map);
         MapS.DrawNowBlock(map);
         if (BlockOverlapS.BlockOverlap(map.NowBlock))
-        {
-            Debug.Log($"{map.PlayerID}游戏失败");
-            map.NowBlock.enabled = false;
-            map.enabled = false;
-        }
+            GameEnd(map);
     }
 }
 
